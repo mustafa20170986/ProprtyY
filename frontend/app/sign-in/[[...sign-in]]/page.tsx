@@ -1,0 +1,5 @@
+import { SignIn } from "@clerk/nextjs";
+
+export default function Page() {
+  return <div className="min-h-screen grid place-items-center bg-[#FAF7F2]"><SignIn /></div>;
+}
