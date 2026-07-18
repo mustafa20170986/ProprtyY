@@ -1,5 +1,6 @@
 // app/components/forms/RoleApplicationForm.tsx
 "use client";
+
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,11 +21,13 @@ const schema = z.object({
   requestedRole: z.enum(["agent", "agency"]),
 });
 
+type FormValues = z.infer<typeof schema>;
+
 export default function RoleApplicationForm({
   onSubmit,
   defaultEmail,
 }: {
-  onSubmit: (d: any) => Promise<void>;
+  onSubmit: (d: FormValues) => Promise<void>;
   defaultEmail?: string;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -33,11 +36,17 @@ export default function RoleApplicationForm({
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
-  } = useForm({
+  } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: defaultEmail,
-      requestedRole: "agent" as const,
+      fullName: "",
+      email: defaultEmail || "",
+      phone: "",
+      companyName: "",
+      licenseNumber: "",
+      experience: "",
+      reason: "",
+      requestedRole: "agent",
     },
   });
 
@@ -60,7 +69,7 @@ export default function RoleApplicationForm({
     return () => ctx.revert();
   }, []);
 
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (data: FormValues) => {
     try {
       await onSubmit(data);
     } catch {
@@ -98,6 +107,7 @@ export default function RoleApplicationForm({
             <option value="agency">Agency / Developer</option>
           </select>
         </div>
+        
         <div className="form-field opacity-0">
           <Input
             {...register("fullName")}
@@ -110,6 +120,7 @@ export default function RoleApplicationForm({
             </p>
           )}
         </div>
+
         <div className="form-field opacity-0">
           <Input
             {...register("email")}
@@ -122,6 +133,7 @@ export default function RoleApplicationForm({
             </p>
           )}
         </div>
+
         <div className="form-field opacity-0">
           <Input
             {...register("phone")}
@@ -134,6 +146,7 @@ export default function RoleApplicationForm({
             </p>
           )}
         </div>
+
         <div className="form-field opacity-0">
           <Input
             {...register("companyName")}
@@ -141,6 +154,7 @@ export default function RoleApplicationForm({
             className="h-10 sm:h-12"
           />
         </div>
+
         <div className="form-field opacity-0">
           <Input
             {...register("licenseNumber")}
@@ -148,6 +162,7 @@ export default function RoleApplicationForm({
             className="h-10 sm:h-12"
           />
         </div>
+
         <div className="form-field opacity-0 sm:col-span-2">
           <textarea
             {...register("experience")}
@@ -160,6 +175,7 @@ export default function RoleApplicationForm({
             </p>
           )}
         </div>
+
         <div className="form-field opacity-0 sm:col-span-2">
           <textarea
             {...register("reason")}
@@ -173,6 +189,7 @@ export default function RoleApplicationForm({
           )}
         </div>
       </div>
+
       <div className="form-field opacity-0">
         <Button
           disabled={isSubmitting}

@@ -6,6 +6,7 @@ import Stats from "./components/landing/Stats";
 import Footer from "./components/landing/Footer";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import Navbar from "./components/landing/Navbar";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function LandingPage() {
 
   return (
     <main className="bg-[#FAF7F2]">
+      <Navbar/>
       <Hero />
       <Featured />
       <Stats />
